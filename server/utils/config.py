@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv();
 
 # MongoDB configuration
-MONGO_URL = "mongodb://mongo:27017"
+MONGO_URI = "mongodb://mongo:27017"
 CUTSMART_DB = "CutSmart"
 USERS_COLLECTION = "users"
 HISTORY_COLLECTION = "history"

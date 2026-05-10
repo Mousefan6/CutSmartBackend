@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 from server.utils.config import (
-    MONGO_URL,
+    MONGO_URI,
     CUTSMART_DB,
     USERS_COLLECTION,
     HISTORY_COLLECTION,
@@ -9,7 +9,7 @@ from server.utils.config import (
 
 class DatabaseHandler:
     def __init__(self):
-        self.client = MongoClient(MONGO_URL)
+        self.client = MongoClient(MONGO_URI)
         self.cutsmart_db = self._get_or_init_db(CUTSMART_DB)
 
         self._ensure_collections(self.cutsmart_db)

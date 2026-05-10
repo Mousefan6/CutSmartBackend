@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 import jwt
 
 from server.services.history_service import get_history
+from server.services.history_service import add_to_history
 from server.utils.config import SECRET_KEY
 
 history_bp = Blueprint("history", __name__)
@@ -47,3 +48,24 @@ def get_history():
             "success": False,
             "message": str(e)
         }), 500
+
+@history_bp.route("/save", methods=["POST"])
+def save_history():
+    try:
+        auth_header = request.headers.get("Authorization")
+        if not auth_header:
+            return jsonify({"success": False, "message": "Missing authorization header"}), 401
+
+        token = auth_header.split(" ")[1]
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        user_id = payload["user_id"]
+
+        data = request.get_json()
+        nutrition_data = data.get("nutrition")
+        food_name = data.get("food_name", "Unknown Food")
+
+        add_to_history(user_id, food_name, nutrition_data)
+
+        return jsonify({"success": True, "message": "Saved to history"}), 201
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
